@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CoreX AI</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/styles.css') }}">
+</head>
+<body>
+    <div class="container">
+        <h1>CoreX AI</h1>
+        <form id="input-form">
+            <label for="input_text">Masukkan pertanyaan Anda:</label><br>
+            <input type="text" id="input_text" required><br>
+            <button type="submit">Kirim</button>
+        </form>
+        <div id="output-container">
+            <p id="input-text" class="hidden"></p>
+            <p id="output-text" class="hidden"></p>
+            <p id="error-message" class="hidden"></p>
+        </div>
+    </div>
+    <script src="{{ url_for('static', filename='js/script.js') }}"></script>
+</body>
+</html>
