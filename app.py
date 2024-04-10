@@ -210,7 +210,7 @@ model = BertForSequenceClassification.from_pretrained('bert-base-multilingual-ca
 model.eval()
 
 def analyze_sentiment_bert(input_text):
-    inputs = preprocess_text(input_text)
+    inputs = tokenizer(input_text, return_tensors="pt", truncation=True, padding=True)
     with torch.no_grad():
         outputs = model(**inputs)
     logits = outputs.logits
@@ -257,27 +257,10 @@ def process_input(input_text):
         return response_ml
     else:
         return "Maaf, terjadi kesalahan saat memproses umpan balik Anda."
-    
-    # Additional processing based on sentiment
-    topic_questions = group_questions_by_topic()
-    sentiment = analyze_sentiment(input_text)
-    if sentiment == "positive":
-        if update_database_with_feedback(input_text, sentiment):
-            return "Terima kasih atas umpan balik positif Anda!"
-        else:
-            return "Maaf, terjadi kesalahan saat memproses umpan balik Anda."
-    elif sentiment == "negative":
-        if update_database_with_feedback(input_text, sentiment):
-            return "Maaf atas pengalaman yang tidak memuaskan. Bagaimana kami bisa membantu?"
-        else:
-            return "Maaf, terjadi kesalahan saat memproses umpan balik Anda."
-    
-    response_ml = generate_response_ml(input_text)
-    if update_database_with_feedback(input_text, sentiment):
-        return response_ml
-    else:
-        return "Maaf, terjadi kesalahan saat memproses umpan balik Anda."
 
+    # Preprocess text using tokenizer
+    inputs = tokenizer(input_text, return_tensors="pt", truncation=True, padding=True)
+    return inputs
 
 def update_database_with_feedback(input_text, sentiment):
     try:
