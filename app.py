@@ -21,7 +21,7 @@ def load_data(file_path):
 # Load data from JSON files
 data = load_data('data/data.json')
 
-# Function to check for forbidden words
+# Function to check for forbidden words in the input text
 def check_forbidden_words(input_text):
     forbidden_words = load_data('data/kata.json')
     for word in forbidden_words:
@@ -237,6 +237,26 @@ def process_input(input_text):
     sentiment_score = analyze_sentiment_bert(input_text)
     if sentiment_score > 0.5:
         return "Terima kasih atas umpan balik positif Anda!"
+
+    # Additional processing based on sentiment
+    topic_questions = group_questions_by_topic()
+    sentiment = analyze_sentiment(input_text)
+    if sentiment == "positive":
+        if update_database_with_feedback(input_text, sentiment):
+            return "Terima kasih atas umpan balik positif Anda!"
+        else:
+            return "Maaf, terjadi kesalahan saat memproses umpan balik Anda."
+    elif sentiment == "negative":
+        if update_database_with_feedback(input_text, sentiment):
+            return "Maaf atas pengalaman yang tidak memuaskan. Bagaimana kami bisa membantu?"
+        else:
+            return "Maaf, terjadi kesalahan saat memproses umpan balik Anda."
+    
+    response_ml = generate_response_ml(input_text)
+    if update_database_with_feedback(input_text, sentiment):
+        return response_ml
+    else:
+        return "Maaf, terjadi kesalahan saat memproses umpan balik Anda."
     
     # Additional processing based on sentiment
     topic_questions = group_questions_by_topic()
